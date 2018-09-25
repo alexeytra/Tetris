@@ -19,6 +19,7 @@ public class Main extends Canvas implements Runnable, KeyListener {
         frame.setResizable(false);
         frame.setLayout(null);
 
+        KeyGetter.loadKeys();
 
         JMenuBar bar = new JMenuBar();
         JMenu file = new JMenu("File");
@@ -42,6 +43,9 @@ public class Main extends Canvas implements Runnable, KeyListener {
                 alert.setSize(200, 150);
                 alert.setLayout(null);
                 alert.setLocationRelativeTo(null);
+                alert.setAlwaysOnTop(true);
+
+
                 JLabel score = new JLabel("The highscore is " + highScore);
                 score.setBounds(0, 0, 200, 50);
                 JButton okayButton = new JButton("Okay");
@@ -129,6 +133,10 @@ public class Main extends Canvas implements Runnable, KeyListener {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Calibri", Font.PLAIN, 20));
         g.drawString("Tetris", 170, 50);
+
+    }
+
+    public void init() {
 
     }
 }

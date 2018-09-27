@@ -12,7 +12,7 @@ public class Main extends Canvas implements Runnable, KeyListener {
 
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Tetris");
+        final JFrame frame = new JFrame("Tetris");
         frame.setSize(WIDTH, HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -72,11 +72,20 @@ public class Main extends Canvas implements Runnable, KeyListener {
             }
         });
 
+        JMenuItem options = new JMenuItem("Option");
+        options.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Configuration.openConfig(frame);
+            }
+        });
+
         Main m = new Main();
         m.setBounds(0, 25, WIDTH, HEIGHT - 25);
         frame.add(m);
         file.add(newGame);
         file.add(highScore);
+        file.add(options);
         file.add(exit);
         bar.add(file);
         frame.add(bar);

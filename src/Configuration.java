@@ -1,11 +1,17 @@
 import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import jdk.nashorn.internal.runtime.regexp.joni.Config;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
 
 public class Configuration {
     public static String rotate = "Up", left = "Left", right = "Right", down = "Down", pause = "P";
@@ -85,5 +91,59 @@ public class Configuration {
         }
 
         return result;
+    }
+
+    public static void loadConfig() throws IOException {
+        File config = new File(getDefaultDirectory(), "/Tetris/config.txt");
+        if (!config.exists()){
+            config.createNewFile();
+            saveConfig();
+            return;
+        }
+
+        Scanner s = new Scanner(config);
+        HashMap<String, String> values = new HashMap<String, String>();
+
+        while (s.hasNext()){
+            String[] entry = s.nextLine().split(":");
+            String key = entry[0];
+            String value = entry[1];
+            values.put(key, value);
+        }
+
+        if (values.size() != 5) {
+            saveConfig();
+            return;
+        }
+
+        if (!values.containsKey("left") || !values.containsKey("right") || !values.containsKey("rotate") || !values.containsKey("down") || !values.containsKey("pause")){
+            System.out.println("Invalid names in config");
+            saveConfig();
+            return;
+        }
+    }
+
+    public static void saveConfig() throws IOException {
+        File config = new File(getDefaultDirectory(), "/Tetris/config.txt");
+        if (!config.exists()){
+            config.createNewFile();
+        }
+        PrintWriter pw = new PrintWriter(config);
+        pw.println("right:" + right);
+        pw.println("left:" + left);
+        pw.println("rotate" + rotate);
+        pw.println("down:" + down);
+        pw.println("pause:" + pause);
+        pw.close();
+    }
+
+    public static String getDefaultDirectory() {
+        String os = System.getProperty("os.name");
+        if (os.contains("WIN")){
+            return System.getenv("APPDATA");
+        }else if (os.contains("NUX")){
+            return System.getProperty("user.home");
+        }
+        return System.getProperty("user.home");
     }
 }

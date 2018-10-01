@@ -47,6 +47,7 @@ public class Configuration {
             public void actionPerformed(ActionEvent e) {
                 option.dispose();
                 saveChanges();
+
             }
         });
 
@@ -64,7 +65,11 @@ public class Configuration {
         Configuration.down = down.getSelectedItem();
         Configuration.pause = pause.getSelectedItem();
         Configuration.rotate = rotate.getSelectedItem();
-
+        try {
+            saveConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Choice addChoice(String name, JFrame option, int x, int y){
@@ -94,8 +99,13 @@ public class Configuration {
     }
 
     public static void loadConfig() throws IOException {
-        File config = new File(getDefaultDirectory(), "/Tetris/config.txt");
+        File directory = new File(getDefaultDirectory(), "/Tetris");
+        if (!directory.exists()){
+            directory.mkdirs();
+        }
+        File config = new File(directory, "/config.txt");
         if (!config.exists()){
+
             config.createNewFile();
             saveConfig();
             return;
@@ -105,7 +115,7 @@ public class Configuration {
         HashMap<String, String> values = new HashMap<String, String>();
 
         while (s.hasNext()){
-            String[] entry = s.nextLine().split(":");
+            String[] entry = s.nextLine().split("\\:");
             String key = entry[0];
             String value = entry[1];
             values.put(key, value);
@@ -121,17 +131,38 @@ public class Configuration {
             saveConfig();
             return;
         }
+
+        String left = values.get("left");
+        String right = values.get("right");
+        String rotate = values.get("rotate");
+        String down = values.get("down");
+        String pause = values.get("pause");
+
+        if (getKeyNames().contains(left) && getKeyNames().contains(right) && getKeyNames().contains(rotate) && getKeyNames().contains(down) && getKeyNames().contains(pause)){
+            System.out.println("Invalid keys");
+            return;
+        }
+
+        Configuration.left = left;
+        Configuration.right = right;
+        Configuration.rotate = rotate;
+        Configuration.down = down;
+        Configuration.pause = pause;
+
+
+
     }
 
     public static void saveConfig() throws IOException {
-        File config = new File(getDefaultDirectory(), "/Tetris/config.txt");
-        if (!config.exists()){
-            config.createNewFile();
+        File directory = new File(getDefaultDirectory(), "/Tetris");
+        if (!directory.exists()){
+            directory.mkdirs();
         }
+        File config = new File(directory, "/config.txt");
         PrintWriter pw = new PrintWriter(config);
         pw.println("right:" + right);
         pw.println("left:" + left);
-        pw.println("rotate" + rotate);
+        pw.println("rotate:" + rotate);
         pw.println("down:" + down);
         pw.println("pause:" + pause);
         pw.close();

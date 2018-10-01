@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
+import java.io.IOException;
 
 public class Main extends Canvas implements Runnable, KeyListener {
 
@@ -20,6 +21,11 @@ public class Main extends Canvas implements Runnable, KeyListener {
         frame.setLayout(null);
 
         KeyGetter.loadKeys();
+        try {
+            Configuration.loadConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         JMenuBar bar = new JMenuBar();
         JMenu file = new JMenu("File");

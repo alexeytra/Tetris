@@ -10,6 +10,7 @@ import java.io.IOException;
 public class Main extends Canvas implements Runnable, KeyListener {
 
     public static final int WIDTH = 400, HEIGHT = 565;
+    private Image[] tetrisBlocks;
 
 
     public static void main(String[] args) {
@@ -123,6 +124,7 @@ public class Main extends Canvas implements Runnable, KeyListener {
 
     @Override
     public void run() {
+        init();
         boolean running = true;
         while (running) {
             update();
@@ -148,10 +150,17 @@ public class Main extends Canvas implements Runnable, KeyListener {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Calibri", Font.PLAIN, 20));
         g.drawString("Tetris", 170, 50);
+        g.drawImage(tetrisBlocks[0], 100, 100, 25, 25, null);
 
     }
 
     public void init() {
-
+        requestFocus();
+        try {
+            tetrisBlocks = ImageLoader.loadImage("/tetris.png", 25);
+        } catch (IOException e) {
+            System.out.println("Error loading");
+            System.exit(1);
+        }
     }
 }
